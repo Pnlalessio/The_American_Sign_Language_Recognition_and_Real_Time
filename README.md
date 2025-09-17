@@ -197,3 +197,64 @@ plot_metrics(cnn_history)
 
 ![CNN loss](project_images/CNN_loss.png)
 ![CNN accuracy](project_images/CNN_accuracy.png)
+
+
+# 🌲 Random Forest & Multilayer Perceptron for ASL
+
+Although **Convolutional Neural Networks (CNNs)** are usually the best performing models for **image classification**, I try to test other approaches as well. Below is a summary of **Random Forest** and **Multilayer Perceptron (MLP)** models.
+
+---
+
+## 🌳 Random Forest Classifier (RF)
+
+- A **Random Forest** is an **ensemble** method, combining multiple decision trees to improve robustness and accuracy.  
+- Operates by training many decision trees on random subsets of the data.  
+- Predictions are combined by:
+  - ✅ Voting (for classification)  
+  - 📊 Averaging (for regression)  
+- Implemented in **PySpark MLlib** and can handle **binary and multi-class classification**.  
+- 💡 Idea: leverage strengths of individual trees while reducing weaknesses.
+
+---
+
+## 🧠 Multilayer Perceptron Classifier (MLP)
+
+- An **MLP** is a type of **artificial neural network** for supervised learning tasks.  
+- Composed of:
+  - Input layer: receives data  
+  - Hidden layers: process data through interconnected neurons  
+  - Output layer: predicts the class label  
+- Connections between neurons have **weights** updated during training based on prediction errors.  
+- Common applications: **image recognition**, **speech recognition**, **NLP**.
+
+---
+
+## ⚠️ Important Notes
+
+- Both **Random Forest** and **MLP** show **lower performance compared to CNNs** for this ASL image classification task.  
+- ✅ **CNN remains the best model** for this dataset.  
+- All **code and detailed results** for RF and MLP can be found **inside the notebook**.
+
+---
+
+# ⏱️ Real-Time Application
+
+- The **saved CNN model** and the **Python program** implementing the real-time application are provided in **two separate files**.  
+- 🎥 A **video demo** of the application's execution is included in the drive folder at the [link](https://drive.google.com/file/d/1OEGV7z8TNAxe0lG5piTuwHoZqR1Oa7KM/view?usp=sharing).  
+
+---
+
+## 💡 How to test in real time
+
+- Position your **laptop camera** facing a **well-lit area**.  
+- Reason: The application uses **color thresholding**, which depends on color gradations in the image.  
+  - ⚠️ Poor or uneven lighting can **reduce the model's prediction accuracy**.  
+
+## ▶️ Run Real-Time Application
+
+To **run the real-time ASL application**, simply execute the Python script:
+
+```bash
+python asl_application.py
+
+```
