@@ -99,7 +99,7 @@ CNNs automatically learn relevant features and are highly effective for image cl
 
 ## 🔧 Training strategy
 
-In the following code cells, I show the training, validation, and testing of the best models selected after **hyperparameter tuning**.  
+In this notebook, I show the training, validation, and testing of the best models selected after **hyperparameter tuning**.  
 
 - I followed a **try and test strategy** because full **Cross-Validation** would consume too many resources (time and memory).  
 - Even limited CV on CNN models caused **memory overflow**.  
@@ -107,3 +107,90 @@ In the following code cells, I show the training, validation, and testing of the
 So, the chosen strategy balanced performance tuning with available resources.
 
 ---
+
+# 🖼️ CNN + Horovod Training Example
+
+```python
+batch_size = 120
+nb_classes = 24
+epochs = 15
+
+model = Sequential()
+model.add(keras.layers.Reshape((28, 28, 1), input_shape=(784,)))
+model.add(keras.layers.Conv2D(32, kernel_size=(5,5), activation='relu'))
+model.add(keras.layers.MaxPooling2D(pool_size = (2, 2)))
+
+model.add(keras.layers.Conv2D(64, kernel_size = (5, 5), activation = 'relu'))
+model.add(keras.layers.MaxPooling2D(pool_size = (2, 2)))
+model.add(keras.layers.Dropout(0.20))
+
+model.add(keras.layers.Conv2D(128, kernel_size = (3, 3), activation = 'relu'))
+model.add(keras.layers.MaxPooling2D(pool_size = (2, 2)))
+model.add(keras.layers.Dropout(0.20))
+
+model.add(keras.layers.Flatten())
+model.add(keras.layers.Dense(128, activation = 'relu'))
+model.add(keras.layers.Dropout(0.20))
+model.add(keras.layers.Dense(nb_classes, activation = 'softmax'))
+
+optimizer = optimizers.Adam(learning_rate=0.001)
+loss = 'categorical_crossentropy'
+
+```
+
+This following cell code is creating a Horovod (hvd) estimator for distributed training in Keras that allows us to train directly on Spark Dataframe. We can set several parameters for this estimator:
+
+- **num_proc** specifies the number of processes to run in parallel.  
+- **store** is the location of the model file.  
+- **model** is the previously defined Keras model.  
+- **optimizer** is the optimization algorithm used to update the model weights.  
+- **metrics** is a list of metrics to monitor during training and evaluation. It includes 'accuracy', as well as the Precision and Recall metrics.  
+- **loss** is the loss function used to evaluate the model performance.  
+- **validation** is the percentage of the training data used for validation.  
+- **feature_cols** is a list of columns containing the features used for training and prediction.  
+- **label_cols** is a list of columns containing the target variable.  
+- **batch_size** is the number of samples per gradient update.  
+- **epochs** is the number of complete passes over the training data.
+
+
+```python
+keras_estimator = hvd.KerasEstimator(
+    num_proc=2,
+    store=store,
+    model=model,
+    optimizer=optimizer,
+    metrics=['accuracy', keras.metrics.Precision(), keras.metrics.Recall()],
+    loss=loss,
+    validation=0.1,
+    feature_cols=['scaled_features'],
+    label_cols=['label_vec'],
+    batch_size=batch_size,
+    epochs=epochs
+    )
+
+keras_model = keras_estimator.fit(train_df).setOutputCols(['prediction']) # Fit the model
+
+cnn_history = keras_model.getHistory() # Get the metrics hystory
+
+```
+Below are the graphs of the calculated CNN metrics
+
+```python
+# This is a function to plot the metrics 
+def plot_metrics(history):
+  for idx, key in enumerate(history):
+    if idx >= 4:
+      break 
+    val_key = 'val_' + key
+    plt.plot(history[key])
+    plt.plot(history[val_key])
+    plt.title('CNN model ' + key)
+    plt.ylabel(key)
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='lower right')
+    plt.show()
+    print()
+
+plot_metrics(cnn_history)
+
+```
