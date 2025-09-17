@@ -108,7 +108,7 @@ So, the chosen strategy balanced performance tuning with available resources.
 
 ---
 
-# 🖼️ CNN + Horovod Training Example
+# 🖼️ CNN + Horovod Training
 
 ```python
 batch_size = 120
