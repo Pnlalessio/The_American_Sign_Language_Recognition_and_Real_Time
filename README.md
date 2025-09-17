@@ -173,7 +173,7 @@ keras_model = keras_estimator.fit(train_df).setOutputCols(['prediction']) # Fit 
 cnn_history = keras_model.getHistory() # Get the metrics hystory
 
 ```
-Below are the graphs of the calculated CNN metrics
+Below is the code and related graphs to compute the CNN metrics.
 
 ```python
 # This is a function to plot the metrics 
@@ -194,3 +194,7 @@ def plot_metrics(history):
 plot_metrics(cnn_history)
 
 ```
+
+![CNN loss](project_images/CNN_loss.png)
+
+![CNN accuracy](project_images/CNN_accuracy.png)
