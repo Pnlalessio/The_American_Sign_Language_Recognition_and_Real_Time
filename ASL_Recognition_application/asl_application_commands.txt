@@ -1,0 +1,11 @@
+
+# run the following commands in sequence for example in a conda environment
+
+# install the requirenments
+1)
+pip install -r requirements.txt
+
+
+# Enter in folder where "asl_application.py" is located and run the following command
+2) 
+python asl_application.py
