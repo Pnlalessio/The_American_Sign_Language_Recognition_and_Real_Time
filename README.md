@@ -196,5 +196,4 @@ plot_metrics(cnn_history)
 ```
 
 ![CNN loss](project_images/CNN_loss.png)
-
 ![CNN accuracy](project_images/CNN_accuracy.png)
