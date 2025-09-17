@@ -62,7 +62,7 @@ The dataset format matches MNIST closely with:
 
 label, pixel1, pixel2, …, pixel784
 
-👉 For more information check the Kaggle dataset link.  
+👉 For more information check the Kaggle dataset [link](https://www.kaggle.com/datasets/datamunge/sign-language-mnist) 
 
 **Data preprocessing** involves:  
 - 🧹 **Data cleansing** (removing invalid, incomplete, or irrelevant data)  
